@@ -49,6 +49,15 @@ You can also run the tool manually at any time to bulk-update every machine on y
 ip-notes
 ```
 
+## Uninstallation
+
+If you wish to remove the utility, run the uninstall script as root:
+
+```bash
+chmod +x uninstall.sh
+./uninstall.sh
+```
+
 ## Requirements
 *   **Proxmox VE 7.x or 8.x**
 *   **QEMU Guest Agent** (Required for VMs to report their IP)
