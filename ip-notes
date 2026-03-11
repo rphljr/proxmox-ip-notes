@@ -42,7 +42,7 @@ update_machine() {
     else
         Port=$443
     fi
-    Link=$"<a href="https://$IP:$Port" target="_blank" rel="noopener noreferrer">https://$IP:$Port</a>"
+    Link=$"<a href="https://$IP:$Port" target="_blank">https://$IP:$Port</a>"
     if [[ "$FIRST_LINE" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
         # First line IS an IP address
         if [ "$FIRST_LINE" == "$IP" ]; then
