@@ -14,7 +14,7 @@ update_machine() {
     local id=$1
     local type=$2 # 'lxc' or 'qemu'
     local conf_cmd=$3 # 'pct' or 'qm'
-    
+
     # Get Status
     STATUS=$($conf_cmd status $id 2>/dev/null | awk '{print $2}')
     if [ "$STATUS" != "running" ]; then
@@ -34,15 +34,17 @@ update_machine() {
 
     # Get Notes
     OLD=$($conf_cmd config $id | grep '^description:' | sed 's/^description: //' | python3 -c 'import sys, urllib.parse; print(urllib.parse.unquote(sys.stdin.read()))')
-    
+
     # Logic: Check if first line is an IP
     FIRST_LINE=$(echo "$OLD" | head -n 1)
-    if [[ "$FIRST_LINE" =~ "Port:*([^\\s]+)" ]]; then
-        Port=${BASH_REMATCH[1]}
-		echo "Port is $Port \n"
+    echo $FIRST_LINE
+    if [[ "$FIRST_LINE" == *"Port:"* ]]; then
+        Port=$(echo $FIRST_LINE | grep -oP 'Port\:\K[^[:space:]]+' )
+        echo "Port is $Port"
+        OLD=${OLD#*$'\n'}
     else
-        Port=$443
-		echo "Port is $Port \n"
+        Port=$(echo '443')
+        echo "Port is $Port"
     fi
     Link=$(echo "<a href=\"https://$IP:$Port\" target=\"_blank\" rel=\"noopener noreferrer\">https://$IP:$Port</a>")
     if [[ "$FIRST_LINE" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -54,8 +56,8 @@ update_machine() {
             # Replace the old IP (First Line) with the new one
             # We use tail -n +2 to get everything AFTER line 1, then put new IP on top
             REST_OF_NOTES=$(echo "$OLD" | tail -n +2)
-            NEW_NOTES=$(printf "Port:$Port\s$Link\n$REST_OF_NOTES")
-            
+            NEW_NOTES=$(printf "Port:$Port $Link\n$REST_OF_NOTES")
+
             pvesh set /nodes/$(hostname)/$type/$id/config --description "$NEW_NOTES" >/dev/null 2>&1
             echo "[✓] Updated $type $id IP: $FIRST_LINE -> $IP"
         fi
@@ -63,7 +65,7 @@ update_machine() {
         # First line is NOT an IP (Normal text)
         if ! echo "$OLD" | grep -q "$IP"; then
             # Prepend IP since it's missing entirely
-            pvesh set /nodes/$(hostname)/$type/$id/config --description "$(printf "Port:$Port\s$Link\n\n$OLD")" >/dev/null 2>&1
+            pvesh set /nodes/$(hostname)/$type/$id/config --description "$(printf "Port:$Port\t$Link\n\n$OLD")" >/dev/null 2>&1
             echo "[✓] Added IP $IP to $type $id"
         else
              [ "$MODE" != "hook" ] && echo "[ ] $type $id IP present in notes"
@@ -79,7 +81,7 @@ else
     echo -e "\n\033[1;36m>>> Updating Proxmox Node Notes <<<\033[0m"
     echo -e "\n\033[1;34m[LXC Containers]\033[0m"
     for id in $(pct list 2>/dev/null | awk 'NR>1 {print $1}'); do update_machine $id "lxc" "pct"; done
-    
+
     echo -e "\n\033[1;35m[Virtual Machines]\033[0m"
     for id in $(qm list 2>/dev/null | awk 'NR>1 {print $1}'); do update_machine $id "qemu" "qm"; done
     echo -e "\n\033[1;36m>>> Update Complete <<<\033[0m\n"
