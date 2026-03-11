@@ -56,14 +56,14 @@ update_machine() {
             NEW_NOTES=$(printf "Port:$Port $Link\n$REST_OF_NOTES")
 
             pvesh set /nodes/$(hostname)/$type/$id/config --description "$NEW_NOTES" >/dev/null 2>&1
-            echo "[✓] Updated $type $id IP: $FIRST_LINE -> $IP"
+            echo "[✓] Updated $type $id IP: $FIRST_LINE -> $IP & $Port"
         fi
     else
         # First line is NOT an IP (Normal text)
         if ! echo "$OLD" | grep -q "$IP"; then
             # Prepend IP since it's missing entirely
             pvesh set /nodes/$(hostname)/$type/$id/config --description "$(printf "Port:$Port\t$Link\n\n$OLD")" >/dev/null 2>&1
-            echo "[✓] Added IP $IP to $type $id"
+            echo "[✓] Added IP $IP & Port $Port to $type $id"
         else
              [ "$MODE" != "hook" ] && echo "[ ] $type $id IP present in notes"
         fi
