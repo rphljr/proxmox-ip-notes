@@ -23,7 +23,7 @@ Unlike heavy polling scripts that scan all your machines every minute, this tool
 
 1.  **Download the files** to your Proxmox host:
     ```bash
-    git clone [https://github.com/saihgupr/proxmox-ip-notes.git](https://github.com/rphljr/proxmox-ip-notes.git)
+    git clone https://github.com/rphljr/proxmox-ip-notes.git
     cd proxmox-ip-notes
     ```
 
