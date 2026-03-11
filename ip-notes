@@ -37,7 +37,7 @@ update_machine() {
     
     # Logic: Check if first line is an IP
     FIRST_LINE=$(echo "$OLD" | head -n 1)
-    if [[ "$FIRST_LINE" =~ "Port:*([^\\s]+)"; then
+    if [[ "$FIRST_LINE" =~ "Port:*([^\\s]+)" ]]; then
         Port=${BASH_REMATCH[1]}
     else
         Port=$443
