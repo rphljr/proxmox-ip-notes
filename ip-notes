@@ -37,14 +37,11 @@ update_machine() {
 
     # Logic: Check if first line is an IP
     FIRST_LINE=$(echo "$OLD" | head -n 1)
-    echo $FIRST_LINE
     if [[ "$FIRST_LINE" == *"Port:"* ]]; then
         Port=$(echo $FIRST_LINE | grep -oP 'Port\:\K[^[:space:]]+' )
-        echo "Port is $Port"
         OLD=${OLD#*$'\n'}
     else
         Port=$(echo '443')
-        echo "Port is $Port"
     fi
     Link=$(echo "<a href=\"https://$IP:$Port\" target=\"_blank\" rel=\"noopener noreferrer\">https://$IP:$Port</a>")
     if [[ "$FIRST_LINE" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
