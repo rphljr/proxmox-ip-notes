@@ -39,10 +39,12 @@ update_machine() {
     FIRST_LINE=$(echo "$OLD" | head -n 1)
     if [[ "$FIRST_LINE" =~ "Port:*([^\\s]+)" ]]; then
         Port=${BASH_REMATCH[1]}
+		echo "Port is $Port \n"
     else
         Port=$443
+		echo "Port is $Port \n"
     fi
-    Link=$"<a href=\"https://$IP:$Port\">https://$IP:$Port</a>"
+    Link=$(echo "<a href=\"https://$IP:$Port\" target=\"_blank\" rel=\"noopener noreferrer\">https://$IP:$Port</a>")
     if [[ "$FIRST_LINE" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
         # First line IS an IP address
         if [ "$FIRST_LINE" == "$IP" ]; then
