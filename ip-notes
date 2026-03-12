@@ -44,7 +44,7 @@ update_machine() {
         Port=$(echo '443')
     fi
     if [[ "$FIRST_LINE" == *"SSL"* ]]; then
-        Link=$(echo "<a href=\"https://$IP:$Port\" target=\"_blank\" rel=\"noopener noreferrer\">https://$IP:$Port</a>")
+        Link=$(echo " SSL <a href=\"https://$IP:$Port\" target=\"_blank\" rel=\"noopener noreferrer\">https://$IP:$Port</a>")
     else
         Link=$(echo "<a href=\"http://$IP:$Port\" target=\"_blank\" rel=\"noopener noreferrer\">http://$IP:$Port</a>")
     fi
