@@ -43,7 +43,11 @@ update_machine() {
     else
         Port=$(echo '443')
     fi
-    Link=$(echo "<a href=\"https://$IP:$Port\" target=\"_blank\" rel=\"noopener noreferrer\">https://$IP:$Port</a>")
+    if [[ "$FIRST_LINE" == *"SSL"* ]]; then
+        Link=$(echo "<a href=\"https://$IP:$Port\" target=\"_blank\" rel=\"noopener noreferrer\">https://$IP:$Port</a>")
+    else
+        Link=$(echo "<a href=\"http://$IP:$Port\" target=\"_blank\" rel=\"noopener noreferrer\">http://$IP:$Port</a>")
+    fi
     if [[ "$FIRST_LINE" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
         # First line IS an IP address
         if [ "$FIRST_LINE" == "$IP" ]; then
