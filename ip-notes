@@ -40,8 +40,10 @@ update_machine() {
     if [[ "$FIRST_LINE" == *"Port:"* ]]; then
         Port=$(echo $FIRST_LINE | grep -oP 'Port\:\K[^[:space:]]+' )
         OLD=${OLD#*$'\n'}
-    else
+    elif [[ "$FIRST_LINE" == *"SSL"* ]]; then
         Port=$(echo '443')
+    else
+        Port=$(echo '80')
     fi
     if [[ "$FIRST_LINE" == *"SSL"* ]]; then
         Link=$(echo " SSL <a href=\"https://$IP:$Port\" target=\"_blank\" rel=\"noopener noreferrer\">https://$IP:$Port</a>")
